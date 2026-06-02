@@ -225,7 +225,7 @@ def parse_config_groups() -> Dict[str, Dict[str, Any]]:
             {
                 "LISTEN_LIST": {
                     "value": config.user.listen_list,
-                    "description": "用户列表(请配置要和bot说话的账号的昵称或者群名，不要写备注！昵称尽量别用特殊字符)",
+                    "description": "用户列表（路 A 改造：QQ 消息由 OpenClaw qqbot 通道自动处理，本字段仅作 KouriChat 主动消息/Cron 触发参考）",
                 },
                 "GROUP_CHAT_CONFIG": {
                     "value": [
@@ -387,7 +387,7 @@ def parse_config_groups() -> Dict[str, Dict[str, Any]]:
                 },
                 "AVATAR_DIR": {
                     "value": config.behavior.context.avatar_dir,
-                    "description": "人设目录（自动包含 avatar.md 和 emojis 目录）",
+                    "description": "人设目录（路 A 改造：avatar.md 注入到 OpenClaw SOUL.md；emojis 目录已废弃，用 <qqmedia> 标签发图）",
                     "options": available_avatars,
                     "type": "select"
                 }
@@ -2713,28 +2713,12 @@ def dismiss_announcement():
 
 @app.route('/reconnect_wechat')
 def reconnect_wechat():
-    try:
-        # 导入微信登录点击器
-        from src.Wechat_Login_Clicker.Wechat_Login_Clicker import click_wechat_buttons
-
-        # 执行点击操作
-        result = click_wechat_buttons()
-
-        if result is False:
-            return jsonify({
-                'status': 'error',
-                'message': '找不到微信登录窗口'
-            })
-
-        return jsonify({
-            'status': 'success',
-            'message': '微信重连操作已执行'
-        })
-    except Exception as e:
-        return jsonify({
-            'status': 'error',
-            'message': f'微信重连失败: {str(e)}'
-        })
+    """路 A 改造：微信已彻底移除，QQ 由 OpenClaw qqbot 通道处理。
+    此端点保留仅为兼容旧 webui 前端，直接返回禁用提示。"""
+    return jsonify({
+        'status': 'error',
+        'message': '微信已移除。QQ 消息由 OpenClaw qqbot 通道处理，请用 openclaw health 检查通道状态'
+    }), 410  # 410 Gone
 
 @app.route('/get_vision_api_configs')
 def get_vision_api_configs():
