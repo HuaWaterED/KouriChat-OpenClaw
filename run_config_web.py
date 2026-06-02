@@ -1505,12 +1505,10 @@ def check_dependencies():
 
                 logger.debug(f"需要的包: {required_packages}")
 
-                # 检查缺失的依赖
+                # 检查缺失的依赖（路 D 改造：移除 wxauto 特殊判断）
                 missing_deps = [
                     pkg for pkg in required_packages
-                    if pkg not in installed_packages and not (
-                        pkg == 'wxauto' and 'wxauto-py' in installed_packages
-                    )
+                    if pkg not in installed_packages
                 ]
 
                 logger.debug(f"缺失的包: {missing_deps}")
@@ -2153,7 +2151,7 @@ def save_quick_setup():
             current_config["categories"]["user_settings"]["settings"]["listen_list"] = {
                 "value": new_config["listen_list"],
                 "type": "array",
-                "description": "要监听的用户列表（请使用微信昵称，不要使用备注名）"
+                "description": "要监听的用户列表（请使用 QQ 昵称；路 D 改造：QQ 由 OpenClaw qqbot 通道接管，本字段仅作 KouriChat 主动触发参考）"
             }
 
         # 更新API设置

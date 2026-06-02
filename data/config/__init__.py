@@ -118,6 +118,18 @@ class IntentRecognitionSettings:
     temperature: float
 
 @dataclass
+class OpenClawSettings:
+    """路 D 改造：KouriChat 桥接到 OpenClaw gateway 的配置段。"""
+    enabled: bool = True
+    openclaw_config_dir: str = "/root/.openclaw"  # OpenClaw 配置目录
+    agent_id: str = "main"  # 目标 agent
+    use_local: bool = True  # True=embedded (subprocess 调 openclaw --local), False=gateway 模式
+    ask_timeout: int = 60  # 主动调 LLM 的默认超时
+    sync_prompts_on_start: bool = True  # 启动时是否把 KouriChat prompt 注入到 OpenClaw
+    http_health_port: int = 8765  # 健康检查 HTTP 端口（0=禁用）
+
+
+@dataclass
 class Config:
     def __init__(self):
         self.user: UserSettings
@@ -127,6 +139,7 @@ class Config:
         self.auth: AuthSettings
         self.network_search: NetworkSearchSettings
         self.intent_recognition: IntentRecognitionSettings
+        self.openclaw: OpenClawSettings = OpenClawSettings()
         self.version: str = "1.0.0"  # 配置文件版本
         self.load_config()
 
